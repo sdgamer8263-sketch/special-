@@ -12,4 +12,4 @@ export interface Server {
   imageUrl: string | null;
 }
 
-export type ViewState = 'dashboard' | 'admin' | 'server';
+export type ViewState = 'dashboard' | 'admin' | 'server' | 'blueprint';

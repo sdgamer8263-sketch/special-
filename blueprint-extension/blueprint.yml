@@ -1,0 +1,8 @@
+name: SK Host
+version: 1.0.0
+description: "SK Host custom extensions, rebranded from Nebula, including Plugin Manager, Player Manager, and more."
+author: sdgamer8263-sketch
+icon: server
+
+# Blueprint will read this file to register the extension.
+# You will need to use blueprint's artisan commands to install this.

@@ -47,6 +47,17 @@ export function Layout({ children, currentView, onNavigate }: LayoutProps) {
                   <ShieldAlert className="w-4 h-4" />
                   <span>Admin Panel</span>
                 </button>
+                <button
+                  onClick={() => onNavigate('blueprint')}
+                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center space-x-2 ${
+                    currentView === 'blueprint'
+                      ? 'bg-indigo-600 text-white'
+                      : 'text-indigo-400 hover:bg-indigo-600/20 hover:text-indigo-300'
+                  }`}
+                >
+                  <ServerIcon className="w-4 h-4" />
+                  <span>Extension Files</span>
+                </button>
               </div>
             </div>
             <div className="flex items-center space-x-4">

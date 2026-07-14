@@ -1,0 +1,20 @@
+name: SK Host
+version: 1.0
+description: "Custom SK Host Extension containing Plugin Manager, Player Manager, Mod Installer, and more."
+author: "sdgamer8263-sketch"
+website: "https://skhost.com"
+icon: server
+
+# Blueprint Extension Configuration
+# This file removes all Nebula, Emma, and prpl.wtf references
+
+requests:
+  app:
+    - SKHostController@index
+
+routes:
+  app:
+    - /admin/extensions/skhost
+
+permissions:
+  - skhost.*

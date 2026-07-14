@@ -5,6 +5,7 @@
 
 import { useState } from 'react';
 import { AdminPanel } from './components/AdminPanel';
+import { BlueprintDownloader } from './components/BlueprintDownloader';
 import { Dashboard } from './components/Dashboard';
 import { Layout } from './components/Layout';
 import { ServerView } from './components/ServerView';
@@ -74,6 +75,9 @@ export default function App() {
           onBack={() => handleNavigate('dashboard')}
           onExtendExpiry={handleExtendExpiry}
         />
+      )}
+      {currentView === 'blueprint' && (
+        <BlueprintDownloader />
       )}
     </Layout>
   );
