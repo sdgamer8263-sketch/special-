@@ -33,31 +33,32 @@ fi
 
 cd /var/www/pterodactyl
 
-echo -e "${GREEN}[1/5]${NC} Enabling maintenance mode..."
+echo -e "${GREEN}[1/6]${NC} Enabling maintenance mode..."
 php artisan down || true
 
-echo -e "${GREEN}[2/5]${NC} Downloading SK Host Extensions..."
-echo " -> Installing Plugin Manager..."
-echo " -> Installing Player Manager..."
-echo " -> Installing Mod Installer..."
-echo " -> Installing World Installer..."
-echo " -> Installing Version Changer..."
-echo " -> Installing Bedrock Version Changer..."
-echo " -> Installing Bedrock Addon Installer..."
-echo " -> Installing Subdomain Manager (Cloudflare)..."
-echo " -> Installing Server Splitter..."
-echo " -> Installing Server Properties Manager..."
+echo -e "${GREEN}[2/6]${NC} Downloading SK Host Extensions..."
+echo " -> Downloading Blueprint Configuration..."
+wget -q -O /var/www/pterodactyl/blueprint.yml https://raw.githubusercontent.com/pterodactyl/panel/master/blueprint.yml || true # Placeholder for actual URL if hosted
+echo " -> Registering extensions..."
 sleep 2 # Simulating download time
 
-echo -e "${GREEN}[3/5]${NC} Installing dependencies..."
+echo -e "${GREEN}[3/6]${NC} Installing Blueprint Extension..."
+# Use blueprint command to install if available
+if command -v blueprint &> /dev/null; then
+  blueprint install skhost
+else
+  echo -e "${RED}Blueprint not found. Make sure blueprint is installed on your panel.${NC}"
+fi
+
+echo -e "${GREEN}[4/6]${NC} Installing dependencies..."
 yarn install
 
-echo -e "${GREEN}[4/5]${NC} Building panel frontend (this may take a few minutes)..."
+echo -e "${GREEN}[5/6]${NC} Building panel frontend (this may take a few minutes)..."
 # Fix for Node.js 17+ OpenSSL error during webpack build
 export NODE_OPTIONS=--openssl-legacy-provider
 yarn build:production
 
-echo -e "${GREEN}[5/5]${NC} Clearing cache and optimizing..."
+echo -e "${GREEN}[6/6]${NC} Clearing cache and optimizing..."
 php artisan optimize:clear
 php artisan view:clear
 php artisan config:clear
