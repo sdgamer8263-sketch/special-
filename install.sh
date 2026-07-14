@@ -31,19 +31,26 @@ cd /var/www/pterodactyl
 echo -e "${GREEN}[1/6]${NC} Enabling maintenance mode..."
 php artisan down || true
 
-echo -e "${GREEN}[2/6]${NC} Downloading SK Host Files from GitHub..."
+echo -e "${GREEN}[2/6]${NC} Downloading SK Host Theme Files..."
 # Clean any previous temp downloads
-rm -rf /tmp/special--main
-# Download the latest files from your repository
-curl -sL https://github.com/sdgamer8263-sketch/special-/archive/refs/heads/main.tar.gz | tar -xz -C /tmp/
+rm -rf /tmp/skhost-theme
+mkdir -p /tmp/skhost-theme
+# In a real scenario, this would download a release zip containing only 'resources' and 'public' folders
+curl -sL https://github.com/sdgamer8263-sketch/special-/archive/refs/heads/main.tar.gz | tar -xz -C /tmp/skhost-theme --strip-components=1
 
-echo -e "${GREEN}[3/6]${NC} Overwriting panel files with SK Host theme..."
-# Copy all files from the downloaded repo directly into the Pterodactyl directory
-cp -rf /tmp/special--main/* /var/www/pterodactyl/
+echo -e "${GREEN}[3/6]${NC} Installing SK Host theme..."
+# SAFE COPY: Only copy resources and public folders to prevent overwriting package.json and core files
+if [ -d "/tmp/skhost-theme/resources" ]; then
+    cp -rf /tmp/skhost-theme/resources/* /var/www/pterodactyl/resources/
+fi
+if [ -d "/tmp/skhost-theme/public" ]; then
+    cp -rf /tmp/skhost-theme/public/* /var/www/pterodactyl/public/
+fi
 
-# Optional: If Blueprint is installed and a blueprint.yml was copied over
-if command -v blueprint &> /dev/null && [ -f "/var/www/pterodactyl/blueprint.yml" ]; then
+# Optional: If Blueprint is installed and a blueprint.yml exists in the theme
+if command -v blueprint &> /dev/null && [ -f "/tmp/skhost-theme/blueprint.yml" ]; then
     echo -e "${GREEN}[+]${NC} Blueprint configuration found! Registering extension..."
+    cp /tmp/skhost-theme/blueprint.yml /var/www/pterodactyl/
     blueprint install skhost || true
 fi
 
@@ -62,7 +69,7 @@ php artisan config:clear
 chown -R www-data:www-data /var/www/pterodactyl/*
 
 # Cleanup temp files
-rm -rf /tmp/special--main
+rm -rf /tmp/skhost-theme
 
 echo ""
 echo -e "${GREEN}====================================================${NC}"
