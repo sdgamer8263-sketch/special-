@@ -5,6 +5,9 @@
 
 set -e
 
+# Ensure maintenance mode is turned off even if the script fails
+trap 'echo -e "\n${BLUE}Ensuring maintenance mode is disabled...${NC}"; php artisan up' EXIT
+
 # Colors
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
@@ -50,6 +53,8 @@ echo -e "${GREEN}[3/5]${NC} Installing dependencies..."
 yarn install
 
 echo -e "${GREEN}[4/5]${NC} Building panel frontend (this may take a few minutes)..."
+# Fix for Node.js 17+ OpenSSL error during webpack build
+export NODE_OPTIONS=--openssl-legacy-provider
 yarn build:production
 
 echo -e "${GREEN}[5/5]${NC} Clearing cache and optimizing..."
@@ -57,7 +62,6 @@ php artisan optimize:clear
 php artisan view:clear
 php artisan config:clear
 chown -R www-data:www-data /var/www/pterodactyl/*
-php artisan up
 
 echo ""
 echo -e "${GREEN}====================================================${NC}"
